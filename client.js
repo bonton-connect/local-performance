@@ -177,7 +177,7 @@ function start() {
             const sinceLastMB = (sinceLast * 8)/(1024 * 1024);
 
             const diff = (Date.now() - last) / 1000;
-            const mbps = Math.round((sinceLastMB / diff) * 10000) / 100;
+            const mbps = Math.round((sinceLastMB / diff) * 100) / 100;
 
             console.log(`${mbps} Mb/s`);
             // screen.render();
