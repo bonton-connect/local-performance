@@ -2,10 +2,7 @@
   "dependencies": {
     "blessed": "^0.1.81",
     "dev-zero-stream": "^1.1.1",
-    "node-ip-lib": "^0.9.0",
-    "random-prime": "^4.0.0",
-    "subnet-info": "^1.0.1",
-    "termux": "^1.1.1",
+    "express": "^4.18.2",
     "ws": "^8.11.0"
   }
 }
