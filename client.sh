@@ -13,4 +13,4 @@ yarn install
 
 termux-wifi-connectioninfo > wifiinfo.json
 
-node ./client.js
+OSTYPE=$OSTYPE node ./client.js

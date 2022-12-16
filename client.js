@@ -6,7 +6,7 @@ const net = require('net');
 
 let ips = [];
 
-if (!(`${process.env.OSTYPE}`.indexOf('android') >= 0)) {
+if (!(`${process.env.PATH}`.indexOf('termux') >= 0 || `${process.env.OSTYPE}`.indexOf('android') >= 0)) {
     const interfaces = os.networkInterfaces()
 
     ips = Object
