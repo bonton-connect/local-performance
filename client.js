@@ -18,6 +18,10 @@ if (!(`${process.env.PATH}`.indexOf('termux') >= 0 || `${process.env.OSTYPE}`.in
         }).concat(['127.0.0.1']);
 } else {
     ips.push(new SubnetInfo(require('./wifiinfo.json').ip + '/24')._broadcastAddress())
+    
+    if (process.env.IP) {
+        ips.push(process.env.IP);
+    }
 }
 
 const dgram = require('dgram');
