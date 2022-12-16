@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "dev-zero-stream": "^1.1.1",
+    "node-ip-lib": "^0.9.0",
+    "random-prime": "^4.0.0",
+    "subnet-info": "^1.0.1",
+    "ws": "^8.11.0"
+  }
+}
