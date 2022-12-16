@@ -1,6 +1,6 @@
 apt update
 apt install -y nodejs git
-[[ $OSTYPE == *"android"* ]] apt install -y termux-api
+[[ $OSTYPE == *"android"* ]] && apt install -y termux-api
 
 npm install -g yarn
 
