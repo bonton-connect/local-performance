@@ -181,6 +181,7 @@ function start() {
 
             console.log(`${mbps} Mb/s`);
             // screen.render();
+            sinceLast = 0;
 
             last = Date.now();
         }, 1000);

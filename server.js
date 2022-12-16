@@ -17,6 +17,7 @@ const ips = Object
 
         return {
             network: si._networkAddress(),
+            netmask: si._netmask(),
             ip: inf.address
         }
     });
@@ -29,7 +30,11 @@ udpServer.addListener('message', (message, info) => {
     const msg = message.toString();
 
     if (msg === 'IP PLS') {
-        const ourIP = ips.find(ip => new ipl.ip(ip.ip).and(info.address).join('.')).ip;
+        const ourIP = ips.find(ip => {
+            const theirIP = new ipl.ip(info.address).and(ip.netmask).join('.');
+            return theirIP === ip.network;
+        }).ip;
+
         console.log('SENDING:', ourIP, ' --> ', `${info.address}:${info.port}`);
         udpServer.send(ourIP, info.port, info.address);
     }
