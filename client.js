@@ -36,109 +36,109 @@ const inter = setInterval(() => {
     }
 }, 2000);
 
-const screen = blessed.screen({
-    smartCSR: true
-});
+// const screen = blessed.screen({
+//     smartCSR: true
+// });
 
-screen.title = 'SPEED TEST CLIENT';
+// screen.title = 'SPEED TEST CLIENT';
 
-const box = blessed.box({
-    top: 'center',
-    left: 'center',
-    height: '100%',
-    padding: 2,
-    content: '',
-    tags: true,
-    border: {
-        type: 'line',
-        bold: true
-    },
-    style: {
-        fg: 'white',
-        // bg: 'magenta',
-        border: {
-            fg: '#f0f0f0'
-        }
-    }
-});
+// const box = blessed.box({
+//     top: 'center',
+//     left: 'center',
+//     height: '100%',
+//     padding: 2,
+//     content: '',
+//     tags: true,
+//     border: {
+//         type: 'line',
+//         bold: true
+//     },
+//     style: {
+//         fg: 'white',
+//         // bg: 'magenta',
+//         border: {
+//             fg: '#f0f0f0'
+//         }
+//     }
+// });
 
-const speed = blessed.BigText({
-    content: '---',
-    fg: 'yellow',
-});
+// const speed = blessed.BigText({
+//     content: '---',
+//     fg: 'yellow',
+// });
 
-const speedText = blessed.text({
-    content: '-- MEGA-BITS / SECOND',
-    fg: 'white',
-    top: 14,
-    style: {
-        bg: 'magenta'
-    }
-});
+// const speedText = blessed.text({
+//     content: '-- MEGA-BITS / SECOND',
+//     fg: 'white',
+//     top: 14,
+//     style: {
+//         bg: 'magenta'
+//     }
+// });
 
-const ping = blessed.bigtext({
-    content: '---',
-    fg: 'white',
-    top: 16
-});
+// const ping = blessed.bigtext({
+//     content: '---',
+//     fg: 'white',
+//     top: 16
+// });
 
-const pingText = blessed.text({
-    content: '-- MILLISECONDs',
-    fg: 'white',
-    top: 14 + 2 + 14
-});
+// const pingText = blessed.text({
+//     content: '-- MILLISECONDs',
+//     fg: 'white',
+//     top: 14 + 2 + 14
+// });
 
 const size = randomPrime({
     min: 1024 * 1024 * 5,
     max: 1024 * 1024 * 50
 });
 
-const agreedUponSize = blessed.text({
-    content: `CHUNK SIZE: ${size} bytes | ~ ${Math.round(size / 1024 / 1024)} MBs`,
-    fg: 'white',
-    bottom: 5,
-    left: 0
-});
+// const agreedUponSize = blessed.text({
+//     content: `CHUNK SIZE: ${size} bytes | ~ ${Math.round(size / 1024 / 1024)} MBs`,
+//     fg: 'white',
+//     bottom: 5,
+//     left: 0
+// });
 
-const server = blessed.text({
-    content: `SERVER: ---`,
-    fg: 'white',
-    bottom: 5,
-    right: 0
-});
+// const server = blessed.text({
+//     content: `SERVER: ---`,
+//     fg: 'white',
+//     bottom: 5,
+//     right: 0
+// });
 
-const progressBar = blessed.progressbar({
-    filled: 50,
-    pch: '-',
-    width: '92%',
-    height: 1,
-    bottom: 0,
-    orientation: 'horizontal'
-});
+// const progressBar = blessed.progressbar({
+//     filled: 50,
+//     pch: '-',
+//     width: '92%',
+//     height: 1,
+//     bottom: 0,
+//     orientation: 'horizontal'
+// });
 
-box.append(speed);
-box.append(speedText);
-box.append(ping);
-box.append(pingText);
-box.append(agreedUponSize);
-box.append(server);
+// box.append(speed);
+// box.append(speedText);
+// box.append(ping);
+// box.append(pingText);
+// box.append(agreedUponSize);
+// box.append(server);
 
-box.append(progressBar);
+// box.append(progressBar);
 
-box.on('click', () => process.exit(0));
+// box.on('click', () => process.exit(0));
 
 
-screen.append(box);
+// screen.append(box);
 
-screen.key(['escape', 'q', 'C-c'], function (ch, key) {
-    return process.exit(0);
-});
+// screen.key(['escape', 'q', 'C-c'], function (ch, key) {
+//     return process.exit(0);
+// });
 
 let found = null;
 
 function start() {
-    server.setContent(`SERVER: ${found}`);
-    screen.render();
+    console.log(`SERVER: ${found}`);
+    // screen.render();
 
     const ws = new WebSocket(`ws://${found}:9075/`);
 
@@ -175,8 +175,8 @@ function start() {
             const diff = (Date.now() - last) / 1000;
             const mbps = Math.round((sinceLastMB / diff) * 10000) / 100;
 
-            speed.setContent(`${mbps}`);
-            screen.render();
+            console.log(`${mbps} Mb/s`);
+            // screen.render();
 
             last = Date.now();
         }, 1000);
@@ -201,8 +201,8 @@ function start() {
             const averagePing = sum/totalWeight;
             ws.send(`P:${Math.round(averagePing)}`);
 
-            ping.setContent(`${Math.round(averagePing)}`);
-            screen.render();
+            console.log(`${Math.round(averagePing)} ms`);
+            // screen.render();
 
             pbi = (pbi + 1) % pingBuffer.length;
             setTimeout(sendPing, 500);
@@ -223,4 +223,4 @@ udpSocket.addListener('message', message => {
     start();
 });
 
-screen.render();
+// screen.render();
