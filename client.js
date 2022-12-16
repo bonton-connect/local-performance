@@ -4,15 +4,21 @@ const os = require('os');
 const SubnetInfo = require('subnet-info');
 const net = require('net');
 
-const interfaces = os.networkInterfaces()
+let ips = [];
 
-const ips = Object
-    .values(interfaces)
-    .flat()
-    .filter(inf => inf.family === 'IPv4')
-    .map(inf => {
-        return new SubnetInfo(inf.cidr)._broadcastAddress();
-    }).concat(['127.0.0.1']);
+if (!(`${process.env.OSTYPE}`.indexOf('android') >= 0)) {
+    const interfaces = os.networkInterfaces()
+
+    ips = Object
+        .values(interfaces)
+        .flat()
+        .filter(inf => inf.family === 'IPv4')
+        .map(inf => {
+            return new SubnetInfo(inf.cidr)._broadcastAddress();
+        }).concat(['127.0.0.1']);
+} else {
+    ips.push(new SubnetInfo(require('./wifiinfo.json').ip + '/24')._broadcastAddress())
+}
 
 const dgram = require('dgram');
 const { clearInterval } = require('timers');
