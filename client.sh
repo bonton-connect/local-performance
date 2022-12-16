@@ -6,6 +6,7 @@ npm install -g yarn
 mkdir -p local-performance
 cd local-performance
 
-[[ -d .git ]] && git clone https://github.com/bonton-connect/local-performance.git . || git pull
+[[ -d .git ]] && git pull || git clone https://github.com/bonton-connect/local-performance.git .
 
+yarn install
 node ./client.js
