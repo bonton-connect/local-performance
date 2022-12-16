@@ -1,5 +1,5 @@
 apt update
-apt install nodejs git
+apt install -y nodejs git
 
 npm install -g yarn
 
