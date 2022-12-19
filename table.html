@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      td,
+      th {
+        padding: 1rem;
+        border: 2px solid black;
+      }
+
+      .avg {
+        background-color: aquamarine;
+      }
+    </style>
+  </head>
+  <body class="p-12">
+    <h1 class="text-5xl text-center mb-10 font-bold">
+      Local Performance Tester
+    </h1>
+    <div class="overflow-x-auto">
+      <table id="data-table" class="border-2 border-gray-400">
+        <tr class="text-left">
+          <th>Client</th>
+          <th>Download Speed</th>
+          <th>Upload Speed</th>
+          <th>Ping</th>
+        </tr>
+        <tr class="avg md:text-3xl">
+          <td></td>
+          <td>Avg Download:</td>
+          <td>Avg Upload:</td>
+          <td>Avg Ping:</td>
+        </tr>
+      </table>
+    </div>
+    <script>
+      const clientData = {};
+
+      setInterval(async () => {
+        try {
+          const { data } = await axios.get("http://localhost:9073/data");
+
+          for (let client in data.clients) {
+            clientData[client] = data.clients[client];
+
+            console.log(clientData);
+
+            const table = document.querySelector("#data-table");
+            const row = table.querySelector(`#client-${client}`);
+
+            if (!row) {
+              const newRow = table.insertRow(1);
+              newRow.id = `client-${client}`;
+              newRow.innerHTML = `
+              <td>${client}</td>
+              <td>${data.clients[client].downloadRate || 0}</td>
+              <td>${data.clients[client].uploadRate || 0} Mb/s</td>
+              <td>${data.clients[client].ping || 0}</td>
+            `;
+            } else {
+              row.querySelector("td:nth-child(2)").innerHTML =
+                `${data.clients[client].downloadRate} Mb/s` || 0;
+              row.querySelector("td:nth-child(3)").innerHTML =
+                `${data.clients[client].uploadRate} Mb/s` || 0;
+              row.querySelector("td:nth-child(4)").innerHTML =
+                `${data.clients[client].ping} ms` || 0;
+            }
+
+            const avgRow = table.querySelector(".avg");
+            const avgDownload =
+              (
+                Object.values(clientData).reduce(
+                  (acc, client) => acc + client.downloadRate,
+                  0
+                ) / Object.values(clientData).length
+              ).toFixed(2) || 0;
+            const avgUpload =
+              (
+                Object.values(clientData).reduce(
+                  (acc, client) => acc + client.uploadRate,
+                  0
+                ) / Object.values(clientData).length
+              ).toFixed(2) || 0;
+            const avgPing =
+              (
+                Object.values(clientData).reduce(
+                  (acc, client) => acc + client.ping,
+                  0
+                ) / Object.values(clientData).length
+              ).toFixed(2) || 0;
+
+            avgRow.querySelector(
+              "td:nth-child(2)"
+            ).innerHTML = `Avg Download: ${avgDownload} Mb/s`;
+            avgRow.querySelector(
+              "td:nth-child(3)"
+            ).innerHTML = `Avg Upload: ${avgUpload} Mb/s`;
+            avgRow.querySelector(
+              "td:nth-child(4)"
+            ).innerHTML = `Avg Ping: ${avgPing} ms`;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>

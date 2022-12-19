@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./input.css" rel="stylesheet" />
+    <title>Document</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      td,
+      th {
+        padding: 1rem;
+        border: 2px solid black;
+      }
+
+      .avg {
+        background-color: aquamarine;
+      }
+    </style>
+  </head>
+  <body
+    class="p-12 flex flex-col justify-center items-center w-full min-h-screen"
+  >
+    <div class="grid md:grid-cols-2 gap-4 text-3xl md:text-5xl mb-10">
+      <a href="http://localhost:9073/table">
+        <div class="p-12">
+          <span class="mb-5 inline-block">Avg Download ⬇️</span>
+          <br />
+          <span id="avgd"></span>
+        </div>
+      </a>
+      <a href="http://localhost:9073/table">
+        <div class="p-12">
+          <span class="mb-5 inline-block">Avg Upload ⬆️</span>
+          <br />
+          <span id="avgu"></span>
+        </div>
+      </a>
+      <a href="http://localhost:9073/table">
+        <div class="p-12">
+          <span class="mb-5 inline-block">Avg Ping</span>
+          <br />
+          <span id="avgp"></span>
+        </div>
+      </a>
+      <a href="http://localhost:9073/table">
+        <div class="p-12">
+          <span class="mb-5 inline-block">Connections</span><br />
+          <span id="avgc"></span>
+        </div>
+      </a>
+    </div>
+    <script>
+      const clientData = {};
+
+      setInterval(async () => {
+        try {
+          const { data } = await axios.get("http://localhost:9073/data");
+
+          for (let client in data.clients) {
+            clientData[client] = data.clients[client];
+
+            console.log(clientData);
+
+            const avgDownload =
+              (
+                Object.values(clientData).reduce(
+                  (acc, client) => acc + client.downloadRate,
+                  0
+                ) / Object.values(clientData).length
+              ).toFixed(2) || 0;
+            const avgUpload =
+              (
+                Object.values(clientData).reduce(
+                  (acc, client) => acc + client.uploadRate,
+                  0
+                ) / Object.values(clientData).length
+              ).toFixed(2) || 0;
+            const avgPing =
+              (
+                Object.values(clientData).reduce(
+                  (acc, client) => acc + client.ping,
+                  0
+                ) / Object.values(clientData).length
+              ).toFixed(2) || 0;
+
+            const totalConnections = Object.values(clientData).length;
+
+            const avgDownloadSpan = document.getElementById("avgd");
+            const avgUploadSpan = document.getElementById("avgu");
+            const avgPingSpan = document.getElementById("avgp");
+            const connectionsSpan = document.getElementById("avgc");
+
+            avgDownloadSpan.innerText = `${avgDownload} Mb/s`;
+            avgUploadSpan.innerText = `${avgUpload} Mb/s`;
+            avgPingSpan.innerText = `${avgPing} ms`;
+            connectionsSpan.innerText = totalConnections;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>
